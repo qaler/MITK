@@ -5,6 +5,26 @@
 set(MITK_CMAKE_MINIMUM_REQUIRED_VERSION 3.18)
 cmake_minimum_required(VERSION ${MITK_CMAKE_MINIMUM_REQUIRED_VERSION})
 
+
+set(VCPKG "F:/vcpkg" CACHE PATH "Vcpkg path" FORCE)
+set(VCPKG_TARGET_TRIPLET "x64-windows-mixed")
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "${VCPKG}/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "")
+    message("Setting CMAKE_TOOLCHAIN_FILE " ${CMAKE_TOOLCHAIN_FILE})
+endif()
+message("CMAKE_TOOLCHAIN_FILE " ${CMAKE_TOOLCHAIN_FILE})
+set(CMAKE_DEBUG_POSTFIX _d)
+add_compile_definitions(LAB_STATIC)
+add_definitions(/bigobj)
+set(ITKV4_COMPATIBILITY OFF)
+set(ITK_LEGACY_REMOVE ON)
+
+set(QT5LAB "C:/Qt/5.15.2/msvc2019_64" CACHE STRING "")
+set(Qt5Core_DIR "${QT5LAB}/lib/cmake/Qt5Core")
+set(Qt5_DIR "${QT5LAB}/lib/cmake/Qt5")
+set(QT_QMAKE_EXECUTABLE "${QT5LAB}/bin/qmake")
+
 if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19 AND CMAKE_VERSION VERSION_LESS 3.19.2)
   message(FATAL_ERROR "\
 CMake v${CMAKE_VERSION} is defective [1]. \
