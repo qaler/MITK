@@ -10,5 +10,5 @@ mitk_create_module(
 )
 
 if(TARGET ${MODULE_TARGET})
-  add_subdirectory(test)
+  #add_subdirectory(test)
 endif()
