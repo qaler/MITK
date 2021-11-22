@@ -461,6 +461,44 @@ function(mitk_create_module)
                     ${coverage_sources} ${CPP_FILES_GENERATED} ${Q${KITNAME}_GENERATED_CPP}
                     ${DOX_FILES} ${UI_FILES} ${QRC_FILES})
         set_property(TARGET ${MODULE_TARGET} PROPERTY FOLDER "${MITK_ROOT_FOLDER}/Modules")
+		
+		list(APPEND _headers ${H_FILES} ${GLOBBED__H_FILES} ${CORRESPONDING__H_FILES} ${TXX_FILES})
+		list(REMOVE_DUPLICATES _headers)
+		
+		foreach(hfile ${_headers})
+			# Don't modify the line if it contains #local at the end.
+			if(NOT "${hfile}" MATCHES "Exports.h$")
+				#message("Including ${hfile}")
+				list(APPEND _allHeaders ${hfile})
+			else()
+				message("excluding ${hfile}")
+			endif()
+		endforeach()
+		set_target_properties(${MODULE_TARGET} PROPERTIES PUBLIC_HEADER "${_allHeaders}")
+		 
+		if("${MODULE_TARGET}" MATCHES "ImageStatistics$" OR "${MODULE_TARGET}" MATCHES "StatisticsUI$")
+			message("Skip installing ${MODULE_TARGET}")
+		else()
+			if( NOT _headers )
+				#message("Empty headers")
+				install(TARGETS ${MODULE_TARGET}
+					CONFIGURATIONS Debug
+					RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+					ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+					LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+				)
+			else()
+				#message("Headers: ${_headers}")
+				install(TARGETS ${MODULE_TARGET}
+					CONFIGURATIONS Debug
+					RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+					ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+					LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+					PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+				)
+		endif()
+		endif()
+		
         set(_us_module_name ${MODULE_TARGET})
       endif()
 
