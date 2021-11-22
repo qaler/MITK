@@ -52,7 +52,7 @@ namespace mitk
     void ApplyBinaryImageToLabelMapFilter(const itk::Image<TPixel, VImageDimension>* inputImage);
 
     void GenerateData() override;
-    void VerifyInputInformation() const override;
+    void VerifyInputInformation() ITKv5_CONST override;
     void VerifyInputImage(const mitk::Image* inputImage) const;
 
     bool m_FullyConnected = true;

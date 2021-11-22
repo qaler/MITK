@@ -88,7 +88,7 @@ void mitk::BinaryImageToLabelSetImageFilter::SetInput(unsigned int index, const 
   this->SetInput(image);
 }
 
-void mitk::BinaryImageToLabelSetImageFilter::VerifyInputInformation() const
+void mitk::BinaryImageToLabelSetImageFilter::VerifyInputInformation() ITKv5_CONST
 {
   Superclass::VerifyInputInformation();
 
