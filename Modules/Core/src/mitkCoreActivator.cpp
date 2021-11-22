@@ -154,6 +154,7 @@ public:
 
 void MitkCoreActivator::Load(us::ModuleContext *context)
 {
+  std::cout << "MitkCoreActivator::Load: " << context << std::endl;
   // Handle messages from CppMicroServices
   us::installMsgHandler(HandleMicroServicesMessages);
 
@@ -294,6 +295,7 @@ void MitkCoreActivator::RegisterDefaultMimeTypes()
 void MitkCoreActivator::RegisterItkReaderWriter()
 {
   std::list<itk::LightObject::Pointer> allobjects = itk::ObjectFactoryBase::CreateAllInstance("itkImageIOBase");
+  std::cout << "RegisterItkReaderWriter: " << allobjects.size() << std::endl;
 
   for (auto &allobject : allobjects)
   {
@@ -302,12 +304,17 @@ void MitkCoreActivator::RegisterItkReaderWriter()
     // NiftiImageIO does not provide a correct "SupportsDimension()" methods
     // and the supported read/write extensions are not ordered correctly
     if (dynamic_cast<itk::NiftiImageIO *>(io))
+    {
+      std::cout << "NiftiImageIO does not provide a correct \" SupportsDimension() \" methods" << std::endl;
+      std::cout << "and the supported read/write extensions are not ordered correctly" << std::endl;
       continue;
+    }
 
     // Use a custom mime-type for GDCMImageIO below
-    if (dynamic_cast<itk::GDCMImageIO *>(allobject.GetPointer()))
+    if ( 0 && dynamic_cast<itk::GDCMImageIO *>(allobject.GetPointer()))
     {
       // MITK provides its own DICOM reader (which internally uses GDCMImageIO).
+      std::cout << "MITK provides its own DICOM reader (which internally uses GDCMImageIO)." << std::endl;
       continue;
     }
 
@@ -334,6 +341,7 @@ void MitkCoreActivator::RegisterVtkReaderWriter()
 
   m_FileIOs.push_back(new mitk::ImageVtkXmlIO());
   m_FileIOs.push_back(new mitk::ImageVtkLegacyIO());
+  std::cout << "VtkReaderWriterReaderWriter: " << m_FileIOs.size() << std::endl;
 }
 
 void MitkCoreActivator::RegisterLegacyWriter()
