@@ -11,7 +11,6 @@ found in the LICENSE file.
 ============================================================================*/
 
 #include <itkSpatialOrientationAdapter.h>
-
 #include "mitkSlicedGeometry3D.h"
 #include "mitkAbstractTransformGeometry.h"
 #include "mitkApplyTransformMatrixOperation.h"
@@ -758,7 +757,7 @@ void mitk::SlicedGeometry3D::ExecuteOperation(Operation *operation)
         if (std::abs(rotationAngle - 180) < mitk::eps)
         {
           // current Normal and desired normal are not linear independent!!(e.g 1,0,0 and -1,0,0).
-          // Rotation Axis should be ANY vector that is 90� to current Normal
+          // Rotation Axis should be ANY vector that is 90 to current Normal
           mitk::Vector3D helpNormal;
           helpNormal = currentNormal;
           helpNormal[0] += 1;
@@ -814,7 +813,7 @@ void mitk::SlicedGeometry3D::ExecuteOperation(Operation *operation)
           if (std::abs(rotationAngle - 180) < mitk::eps)
           {
             // current axisVec and desired axisVec are not linear independent!!(e.g 1,0,0 and -1,0,0).
-            // Rotation Axis can be just plane Normal. (have to rotate by 180�)
+            // Rotation Axis can be just plane Normal. (have to rotate by 180)
             rotationAxis = newNormal;
           }
 
