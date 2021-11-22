@@ -323,6 +323,18 @@ Interactions/Legacy/StateMachine.xml
 Interactions/Legacy/DisplayConfigMITKTools.xml
 Interactions/PointSetConfig.xml
 
+# LabMRI related resources
+Interactions/DisplayConfigPACSLabMRI.xml
+Interactions/DisplayConfigPACS.xml
+Interactions/Custom/FieldofViewDisplayConfig.xml
+Interactions/Custom/FieldofViewDisplayInteraction.xml
+Interactions/Custom/ViDisplayConfig.xml
+Interactions/Custom/ViDisplayInteraction.xml
+Interactions/Fov/GeneralFovConfig.xml
+Interactions/Fov/GeneralFovInteraction.xml
+Interactions/Fov/SplitPlanesFovConfig.xml
+Interactions/Fov/SplitPlanesFovInteraction.xml
+
 mitkLevelWindowPresets.xml
 mitkAnatomicalStructureColorPresets.xml
 )
