@@ -25,6 +25,7 @@ found in the LICENSE file.
 
 void MitkQtWidgetsActivator::Load(us::ModuleContext * /*context*/)
 {
+  std::cout << "MitkQtWidgetsActivator::Load"  << std::endl;
   Q_INIT_RESOURCE(Qmitk);
   m_TreeInspector.reset(new QmitkDataStorageInspectorProviderBase<QmitkDataStorageListInspector>("org.mitk.QmitkDataStorageListInspector", "Simple list", "Displays the filtered content of the data storage in a simple list.", ":/Qmitk/list-solid.svg"));
   m_ListInspector.reset(new QmitkDataStorageInspectorProviderBase<QmitkDataStorageTreeInspector>("org.mitk.QmitkDataStorageTreeInspector", "Rendering tree", "Displays the filtered content of the data storage as the current rendering tree. \n(Equals the old data manager view)", ":/Qmitk/tree_inspector.svg"));

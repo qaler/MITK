@@ -59,6 +59,7 @@ namespace mitk {
 
   void DICOMImageIOActivator::Load(us::ModuleContext* context)
   {
+    std::cout << "DICOMImageIOActivator::Load: " << context << std::endl;
     m_Context = context;
 
     m_AutoSelectingDICOMReader = std::make_unique<AutoSelectingDICOMReaderService>();

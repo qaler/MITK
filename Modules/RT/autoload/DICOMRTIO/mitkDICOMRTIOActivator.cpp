@@ -31,6 +31,7 @@ namespace mitk
 
     void Load(us::ModuleContext* context) override
     {
+      std::cout << "DICOMRTIOActivator::Load: " <<context<< std::endl;
       us::ServiceProperties props;
       props[us::ServiceConstants::SERVICE_RANKING()] = 100;
 

@@ -28,6 +28,7 @@ namespace mitk
   public:
     void Load(us::ModuleContext * /*context*/) override
     {
+      std::cout << "ContourModelActivator::Load: " << std::endl;
       m_ContourModelReader = new ContourModelReader();
       m_ContourModelSetReader = new ContourModelSetReader();
       m_ContourModelWriter = new ContourModelWriter();

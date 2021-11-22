@@ -15,6 +15,7 @@ found in the LICENSE file.
 
 void MitkRESTServiceActivator::Load(us::ModuleContext *context)
 {
+  std::cout << "MitkRESTServiceActivator::Load: " << context << std::endl;
   m_RESTManager.reset(new mitk::RESTManager);
   context->RegisterService<mitk::IRESTManager>(m_RESTManager.get());
 }

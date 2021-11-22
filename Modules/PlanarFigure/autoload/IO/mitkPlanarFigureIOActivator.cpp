@@ -29,6 +29,7 @@ namespace mitk
   public:
     void Load(us::ModuleContext * /*context*/) override
     {
+      std::cout << "PlanarFigureIOModuleActivator::Load: "  << std::endl;
       m_FileIOs.push_back(new PlanarFigureIO());
     }
     void Unload(us::ModuleContext *) override
