@@ -150,6 +150,10 @@ namespace mitk
     */
     VertexType *GetVertexAt(const mitk::Point3D &point, float eps);
 
+    mitk::ContourElement::VertexType *GetNextVertexAt(const mitk::Point3D &point, float eps);
+
+    mitk::ContourElement::VertexType *GetPreviousVertexAt(const mitk::Point3D &point, float eps);
+
     /** \brief Returns the next vertex to the approximate nearest vertex of a given position in 3D space
     \param point - query position in 3D space.
     \param eps - the error bound for search algorithm.
@@ -190,10 +194,12 @@ namespace mitk
     \param point - query position in 3D space.
     \param eps - the error bound for search algorithm.
     */
-    bool IsNearContour(const mitk::Point3D &point,
-                       float eps,
-                       mitk::ContourElement::VertexType *previousVertex = NULL,
-                       mitk::ContourElement::VertexType *nextVertex = NULL) const;
+    bool IsNearContour(const mitk::Point3D &point, float eps) const;
+
+    bool GetLineSegmentForPoint(const mitk::Point3D &point,
+                                float eps,
+                                mitk::ContourElement::VertexType *previousVertex,
+                                mitk::ContourElement::VertexType *nextVertex) const;
 
     /** \brief Close the contour.
     Connect first with last element.

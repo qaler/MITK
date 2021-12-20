@@ -93,13 +93,23 @@ bool mitk::ContourModelLiveWireInteractor::OnCheckPointClick(const InteractionEv
     {
       auto lastVertex = *(contour->GetVertexList(timeStep).end()-1);
       mitk::ContourElement::VertexType *previousVertex = &mitk::ContourElement::VertexType(lastVertex->Coordinates, lastVertex->IsControlPoint);
-      contour->IsNearContour(click, mitk::ContourModelLiveWireInteractor::eps, timeStep, previousVertex);
-      auto previousVertexInList = contour->GetControlVertexAt(previousVertex->Coordinates, mitk::ContourModelLiveWireInteractor::eps, timeStep);
+      contour->GetLineSegmentForPoint(click, mitk::ContourModelLiveWireInteractor::eps, timeStep, previousVertex);
+      auto previousVertexInList = contour->GetVertexAt(previousVertex->Coordinates, mitk::ContourModelLiveWireInteractor::eps, timeStep);
       auto index = contour->GetIndex(previousVertexInList, timeStep);
       contour->InsertVertexAtIndex(click, index + 1, true, timeStep);
       isVertexSelected = contour->SelectVertexAt(click, mitk::ContourModelLiveWireInteractor::eps, timeStep);
     }
   }
+
+  //auto nextVertex = contour->GetNextVertexAt(click, mitk::ContourModelLiveWireInteractor::eps, timeStep);
+  //auto previousVertex = contour->GetPreviousVertexAt(click, mitk::ContourModelLiveWireInteractor::eps, timeStep);
+  //if (nextVertex && previousVertex)
+  //{
+  //  if (!nextVertex->IsControlPoint || !previousVertex->IsControlPoint)
+  //  {
+  //    isVertexSelected = false;
+  //  }
+  //}
 
   if (isVertexSelected)
   {
@@ -119,7 +129,6 @@ bool mitk::ContourModelLiveWireInteractor::OnCheckPointClick(const InteractionEv
 
     // clear container with void points between neighboring control points
     m_ContourBeingModified.clear();
-
     // finally, return true to pass this condition
     return true;
   }
@@ -128,7 +137,6 @@ bool mitk::ContourModelLiveWireInteractor::OnCheckPointClick(const InteractionEv
     // do not pass condition
     return false;
   }
-
   mitk::RenderingManager::GetInstance()->RequestUpdate(positionEvent->GetSender()->GetRenderWindow());
   return true;
 }
@@ -245,7 +253,11 @@ void mitk::ContourModelLiveWireInteractor::OnMovePoint(StateMachineAction *, Int
   assert(leftLiveWire);
 
   if (!leftLiveWire->IsEmpty(timeStep))
+  {
     leftLiveWire->RemoveVertexAt(0, timeStep);
+    leftLiveWire->SetControlVertexAt(leftLiveWire->GetNumberOfVertices() - 1, timeStep);
+  }
+
 
   editingContour->Concatenate(leftLiveWire, timeStep);
 
@@ -284,11 +296,11 @@ void mitk::ContourModelLiveWireInteractor::OnMovePoint(StateMachineAction *, Int
     return;
   }
 
-  if (!leftLiveWire->IsEmpty(timeStep))
-    leftLiveWire->SetControlVertexAt(leftLiveWire->GetNumberOfVertices() - 1, timeStep);
-
   if (!rightLiveWire->IsEmpty(timeStep))
+  {
     rightLiveWire->RemoveVertexAt(0, timeStep);
+    rightLiveWire->RemoveVertexAt(rightLiveWire->GetNumberOfVertices() - 1, timeStep);
+  }
 
   editingContour->Concatenate(rightLiveWire, timeStep);
 
@@ -365,13 +377,13 @@ void mitk::ContourModelLiveWireInteractor::SplitContourFromSelectedVertex(mitk::
   bool upperPart = false;
   // part between start of countour and previousPoint
   bool lowerPart = true;
-
+  bool edgeCase = false;
   // edge cases when point right before first control vertex is selected or first control vertex is selected
   if (nextPoint == (*it) || srcContour->GetSelectedVertex() == (*it))
   {
     upperPart = true;
     lowerPart = false;
-    m_ContourLeft->AddVertex(previousPoint->Coordinates, previousPoint->IsControlPoint, timeStep);
+    edgeCase = true;
   }
   // if first control vertex is selected, move to next point before adding vertices to m_ContourRight
   // otherwise, second line appears when moving the vertex
@@ -406,6 +418,11 @@ void mitk::ContourModelLiveWireInteractor::SplitContourFromSelectedVertex(mitk::
     {
       m_ContourRight->AddVertex((*it)->Coordinates, (*it)->IsControlPoint, timeStep);
     }
+  }
+
+  if (edgeCase)
+  {
+    m_ContourRight->AddVertex(previousPoint->Coordinates, previousPoint->IsControlPoint, timeStep);
   }
 }
 

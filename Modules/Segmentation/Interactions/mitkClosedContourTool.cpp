@@ -493,8 +493,6 @@ bool mitk::ClosedContourTool::OnCheckPoint(const InteractionEvent *interactionEv
 void mitk::ClosedContourTool::OnFinish(StateMachineAction *, InteractionEvent *interactionEvent)
 {
   // Finish LiveWire tool interaction
-
-  m_Contour->Concatenate(m_ClosureContour);
   auto positionEvent = dynamic_cast<mitk::InteractionPositionEvent *>(interactionEvent);
 
   if (nullptr == positionEvent)
@@ -507,11 +505,11 @@ void mitk::ClosedContourTool::OnFinish(StateMachineAction *, InteractionEvent *i
       return;
   }
 
-  // m_Contour->AddVertex(m_Contour->GetVertexAt(0)->Coordinates, false);
-  // Remove last control point added by double click, if double click was performed on first point
-  // if (OnCheckPoint(interactionEvent))
-  //    m_Contour->RemoveVertexAt(m_Contour->GetNumberOfVertices() - 1);
-
+  if (OnCheckPoint(interactionEvent))
+  {
+    // Remove last control point added by double click, if double click was performed on first point
+    m_Contour->RemoveVertexAt(m_Contour->GetNumberOfVertices() - 1);
+  }
   // remove green connection between mouse position and start point
   m_ClosureContour->Clear();
 
