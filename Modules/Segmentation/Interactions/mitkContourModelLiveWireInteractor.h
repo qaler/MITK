@@ -43,6 +43,8 @@ namespace mitk
 
         virtual void SetEditingContourModelNode(mitk::DataNode *_arg);
 
+    void SetRestrictedAreas(std::vector<mitk::ContourModel::Pointer> restrictedAreas);
+
     virtual void SetWorkingImage(mitk::Image *_arg);
 
     void ConnectActionsAndFunctions() override;
@@ -90,6 +92,7 @@ namespace mitk
     mitk::DataNode::Pointer m_EditingContourNode;
     mitk::ContourModel::Pointer m_ContourLeft;
     mitk::ContourModel::Pointer m_ContourRight;
+    std::vector<mitk::ContourModel::Pointer> m_RestrictedAreas;
   };
 
 } // namespace mitk

@@ -64,6 +64,7 @@ void mitk::ClosedContourTool::ReleaseHelperObjects()
 
   m_EditingContours.clear();
   m_WorkingContours.clear();
+  m_RestrictedAreas.clear();
 
   m_EditingContourNode = nullptr;
   m_EditingContour = nullptr;
@@ -76,6 +77,8 @@ void mitk::ClosedContourTool::ReleaseHelperObjects()
 
   m_ContourNode = nullptr;
   m_Contour = nullptr;
+
+  m_CurrentRestrictedArea = nullptr;
 }
 
 void mitk::ClosedContourTool::ReleaseInteractors()
@@ -90,7 +93,7 @@ void mitk::ClosedContourTool::ConnectActionsAndFunctions()
   CONNECT_FUNCTION("AddPoint", OnAddPoint);
   CONNECT_FUNCTION("CtrlAddPoint", OnAddPoint);
   CONNECT_FUNCTION("Drawing", OnDrawing);
-  CONNECT_FUNCTION("EndDrawing", OnAddPoint);
+  CONNECT_FUNCTION("EndDrawing", OnEndDrawing);
   CONNECT_FUNCTION("MovePoint", OnMouseMoveNoDynamicCosts);
   CONNECT_FUNCTION("FinishContour", OnFinish);
   CONNECT_FUNCTION("DeletePoint", OnLastSegmentDelete);
@@ -306,6 +309,8 @@ void mitk::ClosedContourTool::OnInitLiveWire(StateMachineAction *, InteractionEv
   m_EditingContourNode->AddProperty("contour.points.color", ColorProperty::New(0.0f, 0.0f, 1.0f), nullptr, true);
   m_EditingContourNode->AddProperty("contour.width", mitk::FloatProperty::New(4.0f), nullptr, true);
 
+  m_CurrentRestrictedArea = this->CreateNewContour();
+
   auto dataStorage = this->GetToolManager()->GetDataStorage();
   dataStorage->Add(m_ContourNode, workingDataNode);
   dataStorage->Add(m_LiveWireContourNode, workingDataNode);
@@ -423,10 +428,23 @@ void mitk::ClosedContourTool::OnDrawing(StateMachineAction *, InteractionEvent *
   m_LiveWireFilterClosure->SetStartPoint(positionEvent->GetPositionInWorld());
   m_LiveWireFilterClosure->Update();
 
+  m_CurrentRestrictedArea->AddVertex(positionEvent->GetPositionInWorld());
+
   this->UpdateLiveWireContour();
 
   assert(positionEvent->GetSender()->GetRenderWindow());
   mitk::RenderingManager::GetInstance()->RequestUpdate(positionEvent->GetSender()->GetRenderWindow());
+}
+
+void mitk::ClosedContourTool::OnEndDrawing(StateMachineAction *s, InteractionEvent *interactionEvent)
+{
+  if (m_CurrentRestrictedArea->GetNumberOfVertices() > 1)
+  {
+    auto restrictedArea = m_CurrentRestrictedArea->Clone();
+    m_RestrictedAreas.push_back(restrictedArea);
+  }
+  m_CurrentRestrictedArea = this->CreateNewContour();
+  OnAddPoint(s, interactionEvent);
 }
 
 void mitk::ClosedContourTool::OnMouseMoved(StateMachineAction *, InteractionEvent *interactionEvent)
@@ -544,6 +562,7 @@ void mitk::ClosedContourTool::FinishTool()
   m_ContourInteractor->SetEventConfig("ContourModelModificationConfig.xml", us::GetModuleContext()->GetModule());
   m_ContourInteractor->SetWorkingImage(this->m_ReferenceDataSlice);
   m_ContourInteractor->SetEditingContourModelNode(this->m_EditingContourNode);
+  m_ContourInteractor->SetRestrictedAreas(this->m_RestrictedAreas);
 
   m_ContourNode->SetDataInteractor(m_ContourInteractor.GetPointer());
 

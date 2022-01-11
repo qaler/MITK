@@ -59,6 +59,8 @@ namespace mitk
     /// \brief Draw a contour according to the mouse movement when mouse button is pressed and mouse is moved.
     void OnDrawing(StateMachineAction *, InteractionEvent *interactionEvent);
 
+    void OnEndDrawing(StateMachineAction *, InteractionEvent *interactionEvent);
+
     /// \brief Actual LiveWire computation.
     void OnMouseMoved(StateMachineAction *, InteractionEvent *interactionEvent);
 
@@ -106,6 +108,9 @@ namespace mitk
     mitk::ContourModel::Pointer m_EditingContour;
     mitk::DataNode::Pointer m_EditingContourNode;
     mitk::ContourModelLiveWireInteractor::Pointer m_ContourInteractor;
+
+    mitk::ContourModel::Pointer m_CurrentRestrictedArea;
+    std::vector<mitk::ContourModel::Pointer> m_RestrictedAreas;
 
     /** Slice of the reference data the tool is currently actively working on to
     define contours.*/

@@ -101,15 +101,17 @@ bool mitk::ContourModelLiveWireInteractor::OnCheckPointClick(const InteractionEv
     }
   }
 
-  //auto nextVertex = contour->GetNextVertexAt(click, mitk::ContourModelLiveWireInteractor::eps, timeStep);
-  //auto previousVertex = contour->GetPreviousVertexAt(click, mitk::ContourModelLiveWireInteractor::eps, timeStep);
-  //if (nextVertex && previousVertex)
-  //{
-  //  if (!nextVertex->IsControlPoint || !previousVertex->IsControlPoint)
-  //  {
-  //    isVertexSelected = false;
-  //  }
-  //}
+  if (isVertexSelected)
+  {
+    auto foundVertex = contour->GetSelectedVertex();
+    for (auto restrictedArea : m_RestrictedAreas)
+    {
+      if (restrictedArea->SelectVertexAt(foundVertex->Coordinates, mitk::ContourModelLiveWireInteractor::eps, timeStep))
+      {
+        isVertexSelected = false;
+      }
+    }
+  }
 
   if (isVertexSelected)
   {
@@ -147,6 +149,11 @@ void mitk::ContourModelLiveWireInteractor::SetEditingContourModelNode(mitk::Data
   {
     this->m_EditingContourNode = _arg;
   }
+}
+
+void mitk::ContourModelLiveWireInteractor::SetRestrictedAreas(std::vector<mitk::ContourModel::Pointer> restrictedAreas)
+{
+  m_RestrictedAreas = restrictedAreas;
 }
 
 void mitk::ContourModelLiveWireInteractor::SetWorkingImage(mitk::Image *_arg)
