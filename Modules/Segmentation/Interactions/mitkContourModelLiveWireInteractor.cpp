@@ -92,9 +92,9 @@ bool mitk::ContourModelLiveWireInteractor::OnCheckPointClick(const InteractionEv
     if (isHover)
     {
       auto lastVertex = *(contour->GetVertexList(timeStep).end()-1);
-      mitk::ContourElement::VertexType *previousVertex = &mitk::ContourElement::VertexType(lastVertex->Coordinates, lastVertex->IsControlPoint);
-      contour->GetLineSegmentForPoint(click, mitk::ContourModelLiveWireInteractor::eps, timeStep, previousVertex);
-      auto previousVertexInList = contour->GetVertexAt(previousVertex->Coordinates, mitk::ContourModelLiveWireInteractor::eps, timeStep);
+      mitk::ContourElement::VertexType previousVertex = mitk::ContourElement::VertexType(lastVertex->Coordinates, lastVertex->IsControlPoint);
+      contour->GetLineSegmentForPoint(click, mitk::ContourModelLiveWireInteractor::eps, timeStep, &previousVertex);
+      auto previousVertexInList = contour->GetVertexAt(previousVertex.Coordinates, mitk::ContourModelLiveWireInteractor::eps, timeStep);
       auto index = contour->GetIndex(previousVertexInList, timeStep);
       contour->InsertVertexAtIndex(click, index + 1, true, timeStep);
       isVertexSelected = contour->SelectVertexAt(click, mitk::ContourModelLiveWireInteractor::eps, timeStep);

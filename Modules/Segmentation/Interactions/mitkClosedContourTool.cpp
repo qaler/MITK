@@ -13,7 +13,6 @@ found in the LICENSE file.
 #include "mitkClosedContourTool.h"
 
 #include <mitkContourModelUtils.h>
-#include <mitkLiveWireTool2D.xpm>
 #include <mitkToolManager.h>
 
 #include <usGetModuleContext.h>
@@ -422,7 +421,6 @@ void mitk::ClosedContourTool::OnDrawing(StateMachineAction *, InteractionEvent *
   if (!positionEvent)
     return;
 
-  mitk::Point3D point = positionEvent->GetPositionInWorld();
   m_LiveWireContour->AddVertex(positionEvent->GetPositionInWorld());
   m_LiveWireFilter->Update();
   m_LiveWireFilterClosure->SetStartPoint(positionEvent->GetPositionInWorld());
