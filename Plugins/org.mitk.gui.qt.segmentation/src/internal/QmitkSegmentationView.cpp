@@ -414,7 +414,7 @@ void QmitkSegmentationView::CreateQtPartControl(QWidget* parent)
    m_ToolManager->SetDataStorage(*(this->GetDataStorage()));
    m_ToolManager->InitializeTools();
 
-   QString segTools2D = tr("Add Subtract Fill Erase Paint Wipe 'Region Growing' 'Live Wire' '2D Fast Marching'");
+   QString segTools2D = tr("Add Subtract Fill Erase Paint Wipe 'Region Growing' 'Live Wire' '2D Fast Marching' 'New Add'");
    QString segTools3D = tr("Threshold 'UL Threshold' Otsu 'Fast Marching 3D' 'Region Growing 3D' Watershed Picking");
 #ifdef __linux__
    segTools3D.append(" nnUNet"); // plugin not enabled for MacOS / Windows
