@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QmitkLiveWireTool2DGUIControls</class>
- <widget class="QWidget" name="QmitkLiveWireTool2DGUIControls">
+ <class>QmitkNewAddTool2DGUIControls</class>
+ <widget class="QWidget" name="QmitkNewAddTool2DGUIControls">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -74,13 +74,6 @@
       </spacer>
      </item>
      <item>
-      <widget class="QCheckBox" name="m_SnapClosureCheckBox">
-       <property name="text">
-        <string>Snap closing contour</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QCheckBox" name="m_InformationCheckBox">
        <property name="text">
         <string>Show usage information</string>
@@ -114,7 +107,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans'; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Sans'; font-size:10pt;&quot;&gt;After finishing a segmentation the contour will be still editable. You can move, insert and delete its ancor points.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Sans'; font-size:10pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Sans'; font-size:10pt;&quot;&gt;Push the &amp;quot;Confirm Segmentation&amp;quot; button or deactivate the Live Wire Tool to fill all contours in the working image. Push the &amp;quot;Clear Segmentation&amp;quot; button to delete all unconfirmed contours.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Sans'; font-size:10pt;&quot;&gt;Push the &amp;quot;Confirm Segmentation&amp;quot; button or deactivate the New Add Tool to fill all contours in the working image. Push the &amp;quot;Clear Segmentation&amp;quot; button to delete all unconfirmed contours.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>

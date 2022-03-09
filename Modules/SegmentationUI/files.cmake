@@ -83,6 +83,7 @@ Qmitk/QmitkAdaptiveRegionGrowingToolGUIControls.ui
 Qmitk/QmitkConfirmSegmentationDialog.ui
 Qmitk/QmitkOtsuToolWidgetControls.ui
 Qmitk/QmitkLiveWireTool2DGUIControls.ui
+Qmitk/QmitkNewAddTool2DGUIControls.ui
 Qmitk/QmitkWatershedToolGUIControls.ui
 #Added from ML
 Qmitk/QmitkLabelSetWidgetControls.ui
