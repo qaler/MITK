@@ -33,3 +33,16 @@ index 7d7db3b8..8ce71c8f 100644
    {
      itkExceptionMacro("OpenCV IO only supports writing video with pixels of UCHAR");
    }
+diff --git a/Modules/Remote/GrowCut.remote.cmake b/Modules/Remote/GrowCut.remote.cmake
+new file mode 100644
+index 0000000000..083f3c52a4
+--- /dev/null
++++ b/Modules/Remote/GrowCut.remote.cmake
+@@ -0,0 +1,7 @@
++itk_fetch_module(GrowCut
++"ITKGrowCut segments a 3D image from user-provided foreground and background seeds."
++  MODULE_COMPLIANCE_LEVEL 3
++  GIT_REPOSITORY ${git_protocol}://github.com/InsightSoftwareConsortium/ITKGrowCut.git
++  GIT_TAG 7e9959f46bf40fe23d9ae30364055ae29e6059d0
++  )
++
