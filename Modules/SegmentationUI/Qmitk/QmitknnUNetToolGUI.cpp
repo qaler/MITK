@@ -753,6 +753,7 @@ void QmitknnUNetToolGUI::OnModelChanged(const QString &model)
       m_Controls.plannerLabel->setVisible(false);
       m_Controls.foldBox->setVisible(false);
       m_Controls.foldLabel->setVisible(false);
+      m_Controls.previewButton->setEnabled(false);
       this->ShowEnsembleLayout(true);
       auto models = m_ParentFolder->getModelsForTask<QStringList>(m_Controls.taskBox->currentText());
       models.removeDuplicates();
@@ -770,7 +771,6 @@ void QmitknnUNetToolGUI::OnModelChanged(const QString &model)
                           layout->modelBox->addItem(model);
                       });
       }
-      m_Controls.previewButton->setEnabled(true);
     }
     else
     {
@@ -782,11 +782,17 @@ void QmitknnUNetToolGUI::OnModelChanged(const QString &model)
       m_Controls.foldLabel->setVisible(true);
       m_Controls.previewButton->setEnabled(false);
       this->ShowEnsembleLayout(false);
-      auto trainerPlanners = m_ParentFolder->getTrainerPlannersForTask<QStringList>(selectedTask, model);
-      QStringList trainers, planners;
-      std::tie(trainers, planners) = ExtractTrainerPlannerFromString(trainerPlanners);
       m_Controls.trainerBox->clear();
       m_Controls.plannerBox->clear();
+      auto trainerPlanners = m_ParentFolder->getTrainerPlannersForTask<QStringList>(selectedTask, model);
+      if(trainerPlanners.isEmpty())
+      {
+        ShowErrorMessage("No plans.pkl found for "+model.toStdString()+". Check your directory or download the task again.");
+        m_Controls.foldBox->clear();
+        return;
+      }
+      QStringList trainers, planners;
+      std::tie(trainers, planners) = ExtractTrainerPlannerFromString(trainerPlanners);
       std::for_each(
         trainers.begin(), trainers.end(), [this](QString trainer) { m_Controls.trainerBox->addItem(trainer); });
       std::for_each(
@@ -794,7 +800,8 @@ void QmitknnUNetToolGUI::OnModelChanged(const QString &model)
     }
   }
   else if (!m_EnsembleParams.empty())
-  {
+  { 
+    m_Controls.previewButton->setEnabled(false);
     for (auto &layout : m_EnsembleParams)
     {
       if (box == layout->modelBox)
@@ -802,6 +809,12 @@ void QmitknnUNetToolGUI::OnModelChanged(const QString &model)
         layout->trainerBox->clear();
         layout->plannerBox->clear();
         auto trainerPlanners = m_ParentFolder->getTrainerPlannersForTask<QStringList>(selectedTask, model);
+        if(trainerPlanners.isEmpty())
+        {
+          ShowErrorMessage("No plans.pkl found for "+model.toStdString()+". Check your directory or download the task again.");
+          layout->foldBox->clear();
+          return;
+        }
         QStringList trainers, planners;
         std::tie(trainers, planners) = ExtractTrainerPlannerFromString(trainerPlanners);
         std::for_each(trainers.begin(),
@@ -855,6 +868,11 @@ void QmitknnUNetToolGUI::OnTrainerChanged(const QString &plannerSelected)
     auto selectedModel = m_Controls.modelBox->currentText();
     auto folds = m_ParentFolder->getFoldsForTrainerPlanner<QStringList>(
       selectedTrainer, plannerSelected, selectedTask, selectedModel);
+    if(folds.isEmpty())
+    {
+      ShowErrorMessage("No valid folds found. Check your directory or download the task again.");
+      return;
+    }
     std::for_each(folds.begin(),
                   folds.end(),
                   [this](QString fold)
@@ -883,6 +901,12 @@ void QmitknnUNetToolGUI::OnTrainerChanged(const QString &plannerSelected)
         auto selectedModel = layout->modelBox->currentText();
         auto folds = m_ParentFolder->getFoldsForTrainerPlanner<QStringList>(
           selectedTrainer, plannerSelected, selectedTask, selectedModel);
+        if(folds.isEmpty())
+        {
+          ShowErrorMessage("No valid folds found. Check your directory");
+          this->CheckAllInCheckableComboBox(layout->foldBox);
+          return;
+        }
         std::for_each(folds.begin(),
                       folds.end(),
                       [&layout](const QString &fold)
@@ -943,7 +967,6 @@ void QmitknnUNetToolGUI::OnPythonPathChanged(const QString &pyEnv)
   else
   {
     m_Controls.modeldirectoryBox->setEnabled(true);
-    m_Controls.previewButton->setEnabled(true);
     m_Controls.refreshdirectoryBox->setEnabled(true);
     m_Controls.multiModalBox->setEnabled(true);
     QString setVal = this->FetchResultsFolderFromEnv();
