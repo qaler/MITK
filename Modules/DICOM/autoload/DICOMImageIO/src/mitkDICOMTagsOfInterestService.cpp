@@ -80,7 +80,7 @@ AddTagOfInterest(const DICOMTagPath& tagPath, bool makePersistant)
   this->m_Tags.insert(tagPath);
 
   mitk::IPropertyDescriptions* descriptionSrv = GetDescriptionsService();
-  if (descriptionSrv)
+  if (0 && descriptionSrv)
   {
     descriptionSrv->AddDescriptionRegEx(propRegEx, "DICOM tag: " + tagPath.GetLastNode().tag.GetName());
   }

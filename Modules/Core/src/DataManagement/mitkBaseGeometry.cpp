@@ -580,6 +580,9 @@ void mitk::BaseGeometry::ExecuteOperation(Operation *operation)
       Vector3D rotationVector = rotateOp->GetVectorOfRotation();
       Point3D center = rotateOp->GetCenterOfRotation();
       ScalarType angle = rotateOp->GetAngleOfRotation();
+      std::cout << "Rotate: " << rotationVector << std::endl;
+      std::cout << "angle: " << angle << std::endl;
+      std::cout << "center: " << center << std::endl;
       vtktransform->PostMultiply();
       vtktransform->Translate(-center[0], -center[1], -center[2]);
       vtktransform->RotateWXYZ(angle, rotationVector[0], rotationVector[1], rotationVector[2]);

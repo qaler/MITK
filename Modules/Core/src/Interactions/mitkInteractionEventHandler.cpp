@@ -31,7 +31,7 @@ bool mitk::InteractionEventHandler::SetEventConfig(const std::string &filename, 
     ConfigurationChanged();
     return true;
   }
-  MITK_ERROR << "InteractionEventHandler: Failed to load EventConfiguration";
+  MITK_ERROR << "InteractionEventHandler: Failed to load EventConfiguration: " << filename ;
   return false;
 }
 

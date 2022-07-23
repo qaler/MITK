@@ -64,7 +64,13 @@ std::vector<mitk::FileReaderRegistry::ReaderReference> mitk::FileReaderRegistry:
   std::string filter = us::LDAPProp(us::ServiceConstants::OBJECTCLASS()) == us_service_interface_iid<IFileReader>() &&
                        us::LDAPProp(IFileReader::PROP_MIMETYPE()) == mimeType.GetName();
   std::cout << "File Type: " << filter << std::endl;
+  if (1 && filter == "(&(objectclass=org.mitk.IFileReader)(org.mitk.IFileIO.mimetype=application/vnd.mitk.image.dicom))")
+  {
+    std::cout << "LabMRI: Default loader for image.dicom would crash! Using default dcm service now..." << std::endl;
+    filter = "(&(objectclass=org.mitk.IFileReader)(org.mitk.IFileIO.mimetype=application/vnd.mitk.image.dcm))";
+  }
   auto result = context->GetServiceReferences<IFileReader>(filter);
+  std::cout <<  "GetServiceReferences result: " << result.size() << std::endl;
   if (result.size() == 0)
   {
     std::cout << "LabMRI: File reader service not found! Using default dcm service now..." << std::endl;

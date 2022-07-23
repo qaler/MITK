@@ -268,6 +268,7 @@ namespace mitk
           itkExceptionMacro("unknown ViewDirection");
       }
 
+
       m_Slice->SetPos(0);
       m_Slice->SetSteps((int)slicedWorldGeometry->GetSlices());
 
@@ -343,7 +344,134 @@ namespace mitk
     // Adjust the stepper range of slice stepper according to geometry
     this->AdjustSliceStepperRange();
   }
+  
+  void SliceNavigationController::Update(const mitk::Vector3D &rightVector,
+              const mitk::Vector3D &downVector)
+  {
+    /// <summary> 20211126 Qaler's custom slice plane rotation method
+    TimeGeometry::ConstPointer worldTimeGeometry = m_InputWorldTimeGeometry;
 
+    if (m_BlockUpdate || (m_InputWorldTimeGeometry.IsNull() && m_InputWorldGeometry3D.IsNull()) ||
+        ((worldTimeGeometry.IsNotNull()) && (worldTimeGeometry->CountTimeSteps() == 0)))
+    {
+      return;
+    }
+
+    m_BlockUpdate = true;
+
+    if (m_InputWorldTimeGeometry.IsNotNull() && m_LastUpdateTime < m_InputWorldTimeGeometry->GetMTime())
+    {
+      Modified();
+    }
+    if (m_InputWorldGeometry3D.IsNotNull() && m_LastUpdateTime < m_InputWorldGeometry3D->GetMTime())
+    {
+      Modified();
+    }
+
+    if (m_LastUpdateTime < GetMTime())
+    {
+      m_LastUpdateTime = GetMTime();
+      
+      BaseGeometry::ConstPointer currentGeometry = BaseGeometry::ConstPointer();
+      if (m_InputWorldTimeGeometry.IsNotNull())
+        if (m_InputWorldTimeGeometry->IsValidTimeStep(GetTime()->GetPos()))
+          currentGeometry = m_InputWorldTimeGeometry->GetGeometryForTimeStep(GetTime()->GetPos());
+        else
+          currentGeometry = m_InputWorldTimeGeometry->GetGeometryForTimeStep(0);
+      else
+        currentGeometry = m_InputWorldGeometry3D;
+
+      // initialize the viewplane
+      SlicedGeometry3D::Pointer slicedWorldGeometry = SlicedGeometry3D::Pointer();
+      m_CreatedWorldGeometry = mitk::TimeGeometry::Pointer();
+
+      slicedWorldGeometry = SlicedGeometry3D::New();
+      slicedWorldGeometry->InitializePlanes(rightVector, downVector, 
+          currentGeometry->GetSpacing(), currentGeometry);
+      slicedWorldGeometry->SetSliceNavigationController(this);
+      
+      if (0)
+      {
+        std::cout << "slicedWorldGeometry: " << currentGeometry->GetBounds() << std::endl;
+        slicedWorldGeometry->Print(std::cout);
+      }
+
+      m_Slice->SetPos(0);
+      m_Slice->SetSteps((int)slicedWorldGeometry->GetSlices());
+
+      std::cout << "worldTimeGeometry.IsNull() " << worldTimeGeometry.IsNull() << std::endl;
+      if (worldTimeGeometry.IsNull())
+      {
+        auto createdTimeGeometry = ProportionalTimeGeometry::New();
+        createdTimeGeometry->Initialize(slicedWorldGeometry, 1);
+        m_CreatedWorldGeometry = createdTimeGeometry;
+
+        m_Time->SetSteps(0);
+        m_Time->SetPos(0);
+        m_Time->InvalidateRange();
+      }
+      else
+      {
+        m_BlockUpdate = true;
+        m_Time->SetSteps(worldTimeGeometry->CountTimeSteps());
+        m_Time->SetPos(0);
+
+        const TimeBounds &timeBounds = worldTimeGeometry->GetTimeBounds();
+        m_Time->SetRange(timeBounds[0], timeBounds[1]);
+
+        m_BlockUpdate = false;
+
+        const auto currentTemporalPosition = this->GetTime()->GetPos();
+        assert(worldTimeGeometry->GetGeometryForTimeStep(currentTemporalPosition).IsNotNull());
+
+        if (dynamic_cast<const mitk::ProportionalTimeGeometry *>(worldTimeGeometry.GetPointer()) != nullptr)
+        {
+          std::cout << "worldTimeGeometry is ProportionalTimeGeometry. " << std::endl;
+          const TimePointType minimumTimePoint = worldTimeGeometry->TimeStepToTimePoint(currentTemporalPosition);
+
+          const TimePointType stepDuration =
+            worldTimeGeometry->TimeStepToTimePoint(currentTemporalPosition + 1) - minimumTimePoint;
+
+          auto createdTimeGeometry = ProportionalTimeGeometry::New();
+          createdTimeGeometry->Initialize(slicedWorldGeometry, worldTimeGeometry->CountTimeSteps());
+          createdTimeGeometry->SetFirstTimePoint(minimumTimePoint);
+          createdTimeGeometry->SetStepDuration(stepDuration);
+
+          m_CreatedWorldGeometry = createdTimeGeometry;
+        }
+        else
+        {
+          std::cout << "worldTimeGeometry else" << std::endl;
+          auto createdTimeGeometry = mitk::ArbitraryTimeGeometry::New();
+          const TimeStepType numberOfTimeSteps = worldTimeGeometry->CountTimeSteps();
+          createdTimeGeometry->ReserveSpaceForGeometries(numberOfTimeSteps);
+
+          for (TimeStepType i = 0; i < numberOfTimeSteps; ++i)
+          {
+            const BaseGeometry::Pointer clonedGeometry = slicedWorldGeometry->Clone().GetPointer();
+            const auto bounds = worldTimeGeometry->GetTimeBounds(i);
+            createdTimeGeometry->AppendNewTimeStep(clonedGeometry, bounds[0], bounds[1]);
+          }
+          createdTimeGeometry->Update();
+
+          m_CreatedWorldGeometry = createdTimeGeometry;
+        }
+      }
+    }
+
+    // unblock update; we may do this now, because if m_BlockUpdate was already
+    // true before this method was entered, then we will never come here.
+    m_BlockUpdate = false;
+
+    // Send the geometry. Do this even if nothing was changed, because maybe
+    // Update() was only called to re-send the old geometry and time/slice data.
+    this->SendCreatedWorldGeometry();
+    this->SendSlice();
+    this->SendTime();
+
+    // Adjust the stepper range of slice stepper according to geometry
+    this->AdjustSliceStepperRange();
+  }
   void SliceNavigationController::SendCreatedWorldGeometry()
   {
     // Send the geometry. Do this even if nothing was changed, because maybe

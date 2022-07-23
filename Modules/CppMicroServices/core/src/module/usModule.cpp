@@ -121,7 +121,7 @@ void Module::Start()
 
   if (d->moduleContext)
   {
-    US_WARN << "Module " << d->info.name << " already started.";
+    std::cout << "Module " << d->info.name << " already started."<<std::endl;
     return;
   }
 
@@ -131,6 +131,13 @@ void Module::Start()
   ModuleActivatorHook activatorHook = nullptr;
 
   std::string activator_func = "_us_module_activator_instance_" + d->info.name;
+  if ( 1 && activator_func == "_us_module_activator_instance_1")
+  {
+    std::cout << "Changing strange activator_func " << activator_func << std::endl;
+    activator_func = "_us_module_activator_instance_MitkCore";
+  }
+  std::cout << "Loading " << activator_func << std::endl;
+
   void* activatorHookSym = ModuleUtils::GetSymbol(d->info, activator_func.c_str());
   std::memcpy(&activatorHook, &activatorHookSym, sizeof(void*));
 
@@ -174,7 +181,7 @@ void Module::Stop()
 {
   if (d->moduleContext == nullptr)
   {
-    US_WARN << "Module " << d->info.name << " already stopped.";
+    //US_WARN << "Module " << d->info.name << " already stopped.";
     return;
   }
 

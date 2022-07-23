@@ -1,0 +1,28 @@
+<statemachine>
+	<state name="start" startstate="true">
+	
+		<!-- Translate -->
+		<transition event_class="MousePressEvent" event_variant="StartTranslate" target="start">
+			<action name="startTranslate"/>
+		</transition>
+		<transition event_class="MouseMoveEvent" event_variant="Translate" target="start">
+			<action name="translate"/>
+		</transition>
+		<transition event_class="MouseReleaseEvent" event_variant="EndTranslate" target="start">
+			<action name="endTranslate"/>
+		</transition>
+		
+		<!-- Rotate-->
+		<transition event_class="MousePressEvent" event_variant="StartRotate" target="start">
+			<condition name="isoverfov"/>
+			<action name="startRotation"/>
+		</transition>
+		<transition event_class="MouseMoveEvent" event_variant="Rotate" target="start">
+			<action name="rotate"/>
+		</transition>
+		<transition event_class="MouseReleaseEvent" event_variant="EndRotate" target="start">
+			<action name="endRotation"/>
+		</transition>
+		
+	</state>
+</statemachine>

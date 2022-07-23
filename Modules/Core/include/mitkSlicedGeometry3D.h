@@ -236,6 +236,13 @@ namespace mitk
                                   bool frontside = true,
                                   bool rotated = false);
 
+    /// <summary> Qaler's modification
+    ///  
+    virtual void InitializePlanes(const Vector3D &rightVector, 
+                                  const Vector3D &downVector,
+                                  const Vector3D &spacing,
+                                  const mitk::BaseGeometry *geometry3D);
+
     void SetImageGeometry(const bool isAnImageGeometry) override;
 
     void ExecuteOperation(Operation *operation) override;

@@ -305,7 +305,7 @@ void MitkCoreActivator::RegisterItkReaderWriter()
     // and the supported read/write extensions are not ordered correctly
     if (dynamic_cast<itk::NiftiImageIO *>(io))
     {
-      std::cout << "NiftiImageIO does not provide a correct \" SupportsDimension() \" methods" << std::endl;
+      std::cout << "NiftiImageIO does not provide a correct \" SupportsDimension() \" methods " ;
       std::cout << "and the supported read/write extensions are not ordered correctly" << std::endl;
       continue;
     }
@@ -370,4 +370,6 @@ US_EXPORT_MODULE_ACTIVATOR(MitkCoreActivator)
 // This especially ensures that VTK object factories have already
 // been registered (VTK initialization code is injected by implicitly
 // include VTK header files at the top of this file).
-US_INITIALIZE_MODULE
+// FIXME: Qaler. We disable US_INITIALIZE_MODULE to manually
+// control all modules intialization order.
+//US_INITIALIZE_MODULE

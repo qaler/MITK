@@ -283,6 +283,47 @@ void mitk::SlicedGeometry3D::InitializePlanes(const mitk::BaseGeometry *geometry
 #endif
 }
 
+void mitk::SlicedGeometry3D::InitializePlanes(const mitk::Vector3D &rightVector,
+                            const mitk::Vector3D &downVector,
+                            const mitk::Vector3D &spacing,
+                            const mitk::BaseGeometry *geometry3D)
+{
+  m_ReferenceGeometry = geometry3D;
+  PlaneGeometry::Pointer planeGeometry = mitk::PlaneGeometry::New();
+  planeGeometry->SetIndexToWorldTransformByVtkMatrix(
+      geometry3D->GetVtkTransform()->GetMatrix());
+  planeGeometry->InitializeStandardPlane(rightVector, downVector, &spacing);
+  planeGeometry->SetBounds(geometry3D->GetBounds());
+
+  int worldAxis = 2;
+
+  // Inspired by:
+  // http://www.na-mic.org/Wiki/index.php/Coordinate_System_Conversion_Between_ITK_and_Slicer3
+
+  mitk::AffineTransform3D::MatrixType matrix = geometry3D->GetIndexToWorldTransform()->GetMatrix();
+  matrix.GetVnlMatrix().normalize_columns();
+  mitk::AffineTransform3D::MatrixType::InternalMatrixType inverseMatrix = matrix.GetTranspose();
+
+  int dominantAxis = planeGeometry->CalculateDominantAxes(inverseMatrix).at(worldAxis);
+
+  ///  FiXME: Qaler dominantAxis 
+  dominantAxis = 2;
+
+  ScalarType viewSpacing = geometry3D->GetSpacing()[dominantAxis];
+
+  /// Although the double value returned by GetExtent() holds a round number,
+  /// you need to add 0.5 to safely convert it to unsigned it. I have seen a
+  /// case when the result was less by one without this.
+  auto slices = static_cast<unsigned int>(geometry3D->GetExtent(dominantAxis) + 0.5);
+  if (slices == 0 && geometry3D->GetExtent(dominantAxis) > 0)
+  {
+    // require at least one slice if there is _some_ extent
+    slices = 1;
+  }
+  this->InitializeEvenlySpaced(planeGeometry, viewSpacing, slices);
+}
+
+
 void mitk::SlicedGeometry3D::ReinitializePlanes(const Point3D &center, const Point3D &referencePoint)
 {
   // Need a reference frame to align the rotated planes

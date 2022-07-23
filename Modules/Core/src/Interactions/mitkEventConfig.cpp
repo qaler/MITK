@@ -245,16 +245,30 @@ mitk::EventConfig::EventConfig(const std::string &filename, const us::Module *mo
     module = us::GetModuleContext()->GetModule();
   }
   us::ModuleResource resource = module->GetResource("Interactions/" + filename);
+  EventConfig newConfig;
   if (!resource.IsValid())
   {
-    MITK_ERROR << "Resource not valid. State machine pattern in module " << module->GetName()
-               << " not found: /Interactions/" << filename;
-    return;
+    MITK_WARN << "Could not find resource in module: " << module->GetName() << ". resource: " << filename;
+    std::ifstream in(filename);
+    if (!in.good())
+    {
+      MITK_ERROR << "Resource not valid. State machine pattern in module " << module->GetName()
+                 << " not found: " << filename;
+    }
+    else
+    {
+      MITK_WARN << "Local file open good: " << filename;
+      //newConfig.d->m_XmlParser.SetStream(&in);
+      in.close();
+      newConfig.d->m_XmlParser.SetFileName(filename.c_str());
+    }
+  }
+  else
+  {
+    us::ModuleResourceStream stream(resource);
+    newConfig.d->m_XmlParser.SetStream(&stream);
   }
 
-  EventConfig newConfig;
-  us::ModuleResourceStream stream(resource);
-  newConfig.d->m_XmlParser.SetStream(&stream);
   bool success = newConfig.d->m_XmlParser.Parse() && !newConfig.d->m_Errors;
   if (success)
   {
@@ -332,16 +346,30 @@ bool mitk::EventConfig::AddConfig(const std::string &fileName, const us::Module 
     module = us::GetModuleContext()->GetModule();
   }
   us::ModuleResource resource = module->GetResource("Interactions/" + fileName);
+  EventConfig newConfig(*this);
   if (!resource.IsValid())
   {
-    MITK_ERROR << "Resource not valid. State machine pattern in module " << module->GetName()
-               << " not found: /Interactions/" << fileName;
-    return false;
+    MITK_WARN << "Could not find resource in module: " << module->GetName() << ". resource: " << fileName;
+    std::ifstream in(fileName);
+    if (!in.good())
+    {
+      MITK_ERROR << "Resource not valid. State machine pattern in module " << module->GetName()
+                 << " not found: " << fileName;
+    }
+    else
+    {
+      MITK_WARN << "Local file open good: " << fileName;
+      // newConfig.d->m_XmlParser.SetStream(&in);
+      in.close();
+      newConfig.d->m_XmlParser.SetFileName(fileName.c_str());
+    }
+  }
+  else
+  {
+    us::ModuleResourceStream stream(resource);
+    newConfig.d->m_XmlParser.SetStream(&stream);
   }
 
-  EventConfig newConfig(*this);
-  us::ModuleResourceStream stream(resource);
-  newConfig.d->m_XmlParser.SetStream(&stream);
   bool success = newConfig.d->m_XmlParser.Parse() && !newConfig.d->m_Errors;
   if (success)
   {

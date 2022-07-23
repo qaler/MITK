@@ -95,6 +95,7 @@ namespace mitk {
     auto dicomModule = us::ModuleRegistry::GetModule("MitkDICOM");
     if (nullptr == dicomModule)
     {
+      std::cout << "MitkDICOM module is invalid!" << std::endl;
       std::lock_guard<std::mutex> lock(m_Mutex);
       // Listen for events of module life cycle.
       m_Context->AddModuleListener(this, &DICOMImageIOActivator::EnsureManualSelectingDICOMSeriesReader);
@@ -114,8 +115,10 @@ namespace mitk {
     //We have to handle ManualSelectingDICOMSeriesReader different then the other
     //readers. For more details see the explanations in the constructor.
     std::lock_guard<std::mutex> lock(m_Mutex);
+    auto dicomModule = us::ModuleRegistry::GetModule("MitkDICOM");
     if (nullptr == m_ManualSelectingDICOMSeriesReader && event.GetModule()->GetName()=="MitkDICOM" && event.GetType() == us::ModuleEvent::LOADED)
     {
+      std::cout << "Register m_ManualSelectingDICOMSeriesReader" << std::endl;
       m_ManualSelectingDICOMSeriesReader = std::make_unique<ManualSelectingDICOMReaderService>();
     }
   }

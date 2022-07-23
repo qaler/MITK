@@ -127,6 +127,7 @@ void QmitkRenderWindow::ActivateMenuWidget(bool state)
     disconnect(m_MenuWidget, &QmitkRenderWindowMenu::CrosshairVisibilityChanged, this, &QmitkRenderWindow::CrosshairVisibilityChanged);
     disconnect(m_MenuWidget, &QmitkRenderWindowMenu::CrosshairRotationModeChanged, this, &QmitkRenderWindow::CrosshairRotationModeChanged);
 
+    m_MenuWidget->HideMenu();
     m_MenuWidget->hide();
   }
 }
@@ -215,7 +216,7 @@ void QmitkRenderWindow::enterEvent(QEvent *e)
   // TODO implement new event
   QVTKOpenGLNativeWidget::enterEvent(e);
 
-  if (nullptr != m_MenuWidget)
+  if (nullptr != m_MenuWidget && m_MenuWidgetActivated)
     m_MenuWidget->ShowMenu();
 }
 

@@ -395,6 +395,7 @@ function(mitk_create_module)
           message(SEND_ERROR "Resources specified but ${CMAKE_CURRENT_SOURCE_DIR}/resource directory not found.")
         endif()
         foreach(res_file ${RESOURCE_FILES})
+		  message("RESOURCE_FILES ${res_file}")
           if(EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${res_dir}/${res_file})
             list(APPEND binary_res_files "${res_file}")
           else()
@@ -483,9 +484,9 @@ function(mitk_create_module)
 				#message("Empty headers")
 				install(TARGETS ${MODULE_TARGET}
 					CONFIGURATIONS Debug
-					RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-					ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-					LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+					RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/debug/bin
+					ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/debug/lib
+					LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/debug/lib
 				)
 				install(TARGETS ${MODULE_TARGET}
 					CONFIGURATIONS Release
@@ -497,9 +498,9 @@ function(mitk_create_module)
 				#message("Headers: ${_headers}")
 				install(TARGETS ${MODULE_TARGET}
 					CONFIGURATIONS Debug
-					RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
-					ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-					LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
+					RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/debug/bin
+					ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/debug/lib
+					LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/debug/lib
 					PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 				)
 				install(TARGETS ${MODULE_TARGET}

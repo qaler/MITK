@@ -332,8 +332,8 @@ namespace itk
             output->GetIndex( run, hIndex );
             output->IncreaseFrequencyOfIndex( hIndex, 1 );
 
-            itkDebugStatement(typename HistogramType::IndexType tempMeasurementIndex;)
-              itkDebugStatement(output->GetIndex(run,tempMeasurementIndex);)
+            itkDebugStatement(typename HistogramType::IndexType tempMeasurementIndex;);
+              itkDebugStatement(output->GetIndex(run, tempMeasurementIndex););
               itkDebugMacro( "centerIndex<->index: "
               << static_cast<int>( centerPixelIntensity )
               << "@"<< centerIndex

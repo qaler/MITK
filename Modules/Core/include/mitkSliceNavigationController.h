@@ -209,6 +209,9 @@ namespace mitk
      */
     virtual void Update(ViewDirection viewDirection, bool top = true, bool frontside = true, bool rotated = false);
 
+    /// <summary> 20211126 Qaler's custom slice plane rotation method
+    virtual void Update(const mitk::Vector3D &rightVector, const mitk::Vector3D &downVector);
+
     /**
      * \brief Send the created geometry to the connected
      * observers (renderers)

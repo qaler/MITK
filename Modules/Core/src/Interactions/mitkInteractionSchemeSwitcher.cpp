@@ -38,6 +38,8 @@ void mitk::InteractionSchemeSwitcher::SetInteractionScheme(InteractionEventHandl
     mitkThrow() << "Not a valid interaction event handler to set the interaction scheme.";
   }
 
+  std::cout << "SetInteractionScheme: " << interactionScheme << std::endl;
+
   switch (interactionScheme)
   {
     // MITK MODE

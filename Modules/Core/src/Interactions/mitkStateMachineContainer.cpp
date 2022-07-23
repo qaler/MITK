@@ -53,6 +53,7 @@ mitk::StateMachineContainer::~StateMachineContainer()
 {
 }
 
+
 /**
  * @brief Loads the xml file filename and generates the necessary instances.
  **/
@@ -62,15 +63,29 @@ bool mitk::StateMachineContainer::LoadBehavior(const std::string &fileName, cons
   {
     module = us::GetModuleContext()->GetModule();
   }
+
   us::ModuleResource resource = module->GetResource("Interactions/" + fileName);
+  bool result = false;
   if (!resource.IsValid())
   {
-    mitkThrow() << ("Resource not valid. State machine pattern not found:" + fileName);
+      MITK_WARN <<"Could not find resource in module: "<<module->GetName()<<". resource: "<<fileName;
+      std::ifstream in(fileName);
+      if( !in.good() ){
+          mitkThrow() << ("Resource not valid. State machine pattern not found:" + fileName);
+      }else{
+          MITK_WARN <<"Local file open good: "<<fileName;
+      }
+      in.close();
+      //this->SetStream(&in);
+      this->SetFileName(fileName.c_str());
+      result = this->Parse() && !m_errors;
+  }else{
+      us::ModuleResourceStream stream(resource);
+      this->SetStream(&stream);
+      result = this->Parse() && !m_errors;
   }
-  us::ModuleResourceStream stream(resource);
-  this->SetStream(&stream);
   m_Filename = fileName;
-  return this->Parse() && !m_errors;
+  return result;
 }
 
 mitk::StateMachineState::Pointer mitk::StateMachineContainer::GetStartState() const

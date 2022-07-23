@@ -1,0 +1,31 @@
+<config>
+
+	<!-- Translate -->
+	<event_variant class="MousePressEvent" name="StartTranslate">
+		<attribute name="EventButton" value="LeftMouseButton"/>
+		<attribute name="Modifiers" value="ctrl"/>
+	</event_variant>
+	<event_variant class="MouseMoveEvent" name="Translate">
+		<attribute name="ButtonState" value="LeftMouseButton"/>
+		<attribute name="Modifiers" value="ctrl"/>
+	</event_variant>
+	<event_variant class="MouseReleaseEvent" name="EndTranslate">
+		<attribute name="EventButton" value="LeftMouseButton"/>
+		<attribute name="Modifiers" value="ctrl"/>
+	</event_variant>
+
+	<!-- Rotate -->
+	<event_variant class="MousePressEvent" name="StartRotate">
+		<attribute name="EventButton" value="LeftMouseButton"/>
+		<attribute name="Modifiers" value="alt"/>
+	</event_variant>
+	<event_variant class="MouseMoveEvent" name="Rotate">
+		<attribute name="ButtonState" value="LeftMouseButton"/>
+		<attribute name="Modifiers" value="alt"/>
+	</event_variant>
+	<event_variant class="MouseReleaseEvent" name="EndRotate">
+		<attribute name="EventButton" value="LeftMouseButton"/>
+		<attribute name="Modifiers" value="alt"/>
+	</event_variant>
+	
+</config>

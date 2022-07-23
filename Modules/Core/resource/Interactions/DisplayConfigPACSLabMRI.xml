@@ -1,0 +1,131 @@
+<config>
+  <!-- Zoom sensitivity -->
+  <param name="zoomFactor" value="8"/>
+  <!-- Zoom either by moving mouse leftright or updown -->
+  <param name="zoomDirection" value="updown"/>
+  <!-- scrolling either by moving mouse leftright or updown -->
+  <param name="scrollDirection" value="updown"/>
+  <!-- Sets how many pixel the mouse has to be moved for scrolling 1 slice-->
+  <param name="pixelPerSlice" value="20"/>
+  <!-- when scrolling restart at beginning of volume, when end is reached-->
+  <param name="autoRepeat" value="false"/>
+  <!-- react to an event, even though is was already processed by a DataInteractor-->
+  <param name="alwaysReact" value="false"/>
+  
+  <event_variant class="MousePressEvent" name="StartAdjustLevelWindow">
+    <attribute name="EventButton" value="LeftMouseButton"/>
+  </event_variant>
+  <event_variant class="MouseMoveEvent" name="adjustlevelwindow">
+    <attribute name="ButtonState" value="LeftMouseButton"/>
+  </event_variant>
+  <event_variant class="MouseReleaseEvent" name="EndLevelWindow">
+    <attribute name="EventButton" value="LeftMouseButton"/>
+  </event_variant>
+  
+  <event_variant class="MousePressEvent" name="StartMove">
+    <attribute name="EventButton" value="MiddleMouseButton"/>
+  </event_variant>
+  <event_variant class="MouseReleaseEvent" name="EndMoving">
+    <attribute name="EventButton" value="MiddleMouseButton"/>
+  </event_variant>
+  <event_variant class="MouseMoveEvent" name="Moving">
+    <attribute name="ButtonState" value="MiddleMouseButton"/>
+  </event_variant>
+  
+  <event_variant class="MousePressEvent" name="StartZoom">
+    <attribute name="EventButton" value="RightMouseButton"/>
+  </event_variant>
+  <event_variant class="MouseReleaseEvent" name="EndZooming">
+    <attribute name="EventButton" value="RightMouseButton"/>
+  </event_variant>
+  <event_variant class="MouseMoveEvent" name="Zooming">
+    <attribute name="ButtonState" value="RightMouseButton"/>
+  </event_variant>
+  
+  
+  
+   <event_variant class="MousePressEvent" name="StartMove">
+    <attribute name="EventButton" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="shift"/>
+  </event_variant>
+  <event_variant class="MouseReleaseEvent" name="EndMoving">
+    <attribute name="EventButton" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="shift"/>
+  </event_variant>
+  <event_variant class="MouseMoveEvent" name="Moving">
+    <attribute name="ButtonState" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="shift"/>
+  </event_variant>
+   <event_variant class="MousePressEvent" name="StartMove">
+    <attribute name="EventButton" value="LeftMouseButton"/>
+    <attribute name="Modifiers" value="shift"/>
+  </event_variant>
+  <event_variant class="MouseReleaseEvent" name="EndMoving">
+    <attribute name="EventButton" value="LeftMouseButton"/>
+    <attribute name="Modifiers" value="shift"/>
+  </event_variant>
+  <event_variant class="MouseMoveEvent" name="Moving">
+    <attribute name="ButtonState" value="LeftMouseButton"/>
+    <attribute name="Modifiers" value="shift"/>
+  </event_variant>
+  
+  
+  <!-- Scrolling through planes -->
+  <event_variant class="MouseWheelEvent" name="PlaneUP">
+    <attribute name="ScrollDirection" value="up"/>
+  </event_variant>
+  <event_variant class="MouseWheelEvent" name="PlaneDown">
+    <attribute name="ScrollDirection" value="down"/>
+  </event_variant>
+    <event_variant class="InteractionKeyEvent" name="PlaneUP">
+    <attribute name="Key" value="ArrowUp"/>
+  </event_variant>
+  <event_variant class="InteractionKeyEvent" name="PlaneDown">
+    <attribute name="Key" value="ArrowDown"/>
+  </event_variant>
+  	<!-- Reset Camera -->
+	<event_variant class="InteractionKeyEvent" name="ResetCamera">
+		<attribute name="Key" value="R"/>
+	</event_variant>
+  
+  
+  <!-- scrolling -->
+  <event_variant class="MousePressEvent" name="StartScroll">
+    <attribute name="EventButton" value="LeftMouseButton"/>
+    <attribute name="Modifiers" value="alt"/>
+  </event_variant>
+  <event_variant class="MouseReleaseEvent" name="EndScrolling">
+    <attribute name="EventButton" value="LeftMouseButton"/>
+    <attribute name="Modifiers" value="alt"/>
+  </event_variant>
+  <event_variant class="MouseMoveEvent" name="Scrolling">
+    <attribute name="ButtonState" value="LeftMouseButton"/>
+    <attribute name="Modifiers" value="alt"/>
+  </event_variant>
+  <event_variant class="MousePressEvent" name="StartScroll">
+    <attribute name="EventButton" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="alt"/>
+  </event_variant>
+  <event_variant class="MouseReleaseEvent" name="EndScrolling">
+    <attribute name="EventButton" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="alt"/>
+  </event_variant>
+  <event_variant class="MouseMoveEvent" name="Scrolling">
+    <attribute name="ButtonState" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="alt"/>
+  </event_variant>
+  
+  <!-- Rotation not works -->
+  <event_variant class="MousePressEvent" name="StartRotate">
+    <attribute name="EventButton" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="ctrl"/>
+  </event_variant>
+   <event_variant class="MouseMoveEvent" name="Rotate">
+    <attribute name="ButtonState" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="ctrl"/>
+  </event_variant>
+  <event_variant class="MouseReleaseEvent" name="EndRotate">
+    <attribute name="EventButton" value="RightMouseButton"/>
+    <attribute name="Modifiers" value="ctrl"/>
+  </event_variant>
+</config>
