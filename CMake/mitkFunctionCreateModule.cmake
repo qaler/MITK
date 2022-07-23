@@ -455,6 +455,9 @@ function(mitk_create_module)
         add_executable(${MODULE_TARGET} ${_SHOW_CONSOLE_OPTION}
                        ${MODULE_CPP_FILES} ${coverage_sources} ${CPP_FILES_GENERATED} ${Q${KITNAME}_GENERATED_CPP}
                        ${DOX_FILES} ${UI_FILES} ${QRC_FILES} ${WINDOWS_ICON_RESOURCE_FILE})
+        if(WIN32 AND MITK_UTF8)
+          mitk_add_manifest(${MODULE_TARGET})
+        endif()
         set_property(TARGET ${MODULE_TARGET} PROPERTY FOLDER "${MITK_ROOT_FOLDER}/Modules/Executables")
         set(_us_module_name main)
       else()
@@ -658,10 +661,6 @@ function(mitk_create_module)
                        MODULES ${DEPENDS}
                        PACKAGES ${MODULE_PACKAGE_DEPENDS}
                       )
-    endif()
-
-    if(NOT MODULE_C_MODULE)
-      target_compile_features(${MODULE_TARGET} ${_module_property_type} ${MITK_CXX_FEATURES})
     endif()
 
     # add include directories

@@ -26,12 +26,9 @@ set(CPP_FILES
   DataManagement/mitkContour.cpp
   DataManagement/mitkContourSet.cpp
   DataManagement/mitkExtrudedContour.cpp
-  Interactions/mitkAdaptiveRegionGrowingTool.cpp
   Interactions/mitkAddContourTool.cpp
   Interactions/mitkAutoCropTool.cpp
-  Interactions/mitkAutoSegmentationTool.cpp
-  Interactions/mitkAutoSegmentationWithPreviewTool.cpp
-  Interactions/mitkAutoMLSegmentationWithPreviewTool.cpp
+  Interactions/mitkSegWithPreviewTool.cpp
   Interactions/mitkBinaryThresholdBaseTool.cpp
   Interactions/mitkBinaryThresholdTool.cpp
   Interactions/mitkBinaryThresholdULTool.cpp
@@ -45,9 +42,6 @@ set(CPP_FILES
   Interactions/mitkDrawPaintbrushTool.cpp
   Interactions/mitkErasePaintbrushTool.cpp
   Interactions/mitkEraseRegionTool.cpp
-  Interactions/mitkFastMarchingBaseTool.cpp
-  Interactions/mitkFastMarchingTool.cpp
-  Interactions/mitkFastMarchingTool3D.cpp
   Interactions/mitkFeedbackContourTool.cpp
   Interactions/mitkFillRegionTool.cpp
   Interactions/mitkOtsuTool3D.cpp
@@ -60,9 +54,10 @@ set(CPP_FILES
   Interactions/mitkSubtractContourTool.cpp
   Interactions/mitkTool.cpp
   Interactions/mitkToolCommand.cpp
-  Interactions/mitkWatershedTool.cpp
   Interactions/mitkPickingTool.cpp
+  Interactions/mitknnUnetTool.cpp
   Interactions/mitkSegmentationInteractor.cpp #SO
+  Interactions/mitkProcessExecutor.cpp
   Rendering/mitkContourMapper2D.cpp
   Rendering/mitkContourSetMapper2D.cpp
   Rendering/mitkContourSetVtkMapper3D.cpp
@@ -77,10 +72,10 @@ set(CPP_FILES
 set(RESOURCE_FILES
   Add_48x48.png
   Add_Cursor_32x32.png
+  AI_48x48.png
+  AI_Cursor_32x32.png
   Erase_48x48.png
   Erase_Cursor_32x32.png
-  FastMarching_48x48.png
-  FastMarching_Cursor_32x32.png
   Fill_48x48.png
   Fill_Cursor_32x32.png
   LiveWire_48x48.png
@@ -95,14 +90,11 @@ set(RESOURCE_FILES
   Subtract_Cursor_32x32.png
   Threshold_48x48.png
   TwoThresholds_48x48.png
-  Watershed_48x48.png
-  Watershed_Cursor_32x32.png
   Wipe_48x48.png
   Wipe_Cursor_32x32.png
 
   Interactions/dummy.xml
   Interactions/LiveWireTool.xml
-  Interactions/FastMarchingTool.xml
   Interactions/PickingTool.xml
   Interactions/PressMoveRelease.xml
   Interactions/PressMoveReleaseAndPointSetting.xml

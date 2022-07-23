@@ -154,7 +154,7 @@ namespace mitk
     /// construct standard view.
 
     // We define at the moment "frontside" as: axial from above,
-    // coronal from front (nose), saggital from right.
+    // coronal from front (nose), sagittal from right.
     // TODO: Double check with medicals doctors or radiologists [ ].
 
     // We define the orientation in patient's view, e.g. LAI is in a axial cut
@@ -237,8 +237,7 @@ namespace mitk
         normalDirection = 2; // That is S=Superior=z=third_axis=middlefinger in righthanded LPS-system.
         break;
 
-      // Frontal is known as Coronal in mitk. Plane cuts through patient's ear-ear-heel-heel:
-      case Frontal:
+      case Coronal: // Coronal=Frontal plane; cuts through patient's ear-ear-heel-heel:
         if (frontside)
         {
           if (rotated == false) // x=[1; 0; 0], y=[0; 0; 1], z=[0; 1; 0], origin=[0,zpos,0]: LAI (r.h.)
@@ -317,9 +316,9 @@ namespace mitk
     if ( transform != nullptr )
     {
       origin = transform->TransformPoint( origin );
-      rightDV = transform->TransformVector( rightDV );
-      bottomDV = transform->TransformVector( bottomDV );
-      normal = transform->TransformVector( normal );
+      rightDV = transform->TransformVector( rightDV ).as_ref();
+      bottomDV = transform->TransformVector( bottomDV ).as_ref();
+      normal = transform->TransformVector( normal ).as_ref();
     }
 
     ScalarType bounds[6] = {0, width, 0, height, 0, 1};
@@ -327,9 +326,9 @@ namespace mitk
 
     AffineTransform3D::Pointer planeTransform = AffineTransform3D::New();
     Matrix3D matrix;
-    matrix.GetVnlMatrix().set_column(0, rightDV);
-    matrix.GetVnlMatrix().set_column(1, bottomDV);
-    matrix.GetVnlMatrix().set_column(2, normal);
+    matrix.GetVnlMatrix().set_column(0, rightDV.as_ref());
+    matrix.GetVnlMatrix().set_column(1, bottomDV.as_ref());
+    matrix.GetVnlMatrix().set_column(2, normal.as_ref());
     planeTransform->SetMatrix(matrix);
     planeTransform->SetOffset(this->GetIndexToWorldTransform()->GetOffset());
     this->SetIndexToWorldTransform(planeTransform);
@@ -449,7 +448,7 @@ namespace mitk
       width  = extents[0];
       height = extents[1];
       break;
-    case Frontal:
+    case Coronal:
       width  = extents[0];
       height = extents[2];
       break;
@@ -485,7 +484,7 @@ namespace mitk
     case Axial:
       worldAxis = 2;
       break;
-    case Frontal:
+    case Coronal:
       worldAxis = 1;
       break;
     case Sagittal:
@@ -623,14 +622,14 @@ namespace mitk
   Vector3D PlaneGeometry::GetNormal() const
   {
     Vector3D frontToBack;
-    frontToBack.SetVnlVector(this->GetIndexToWorldTransform()->GetMatrix().GetVnlMatrix().get_column(2));
+    frontToBack.SetVnlVector(this->GetIndexToWorldTransform()->GetMatrix().GetVnlMatrix().get_column(2).as_ref());
 
     return frontToBack;
   }
 
   VnlVector PlaneGeometry::GetNormalVnl() const
   {
-    return this->GetIndexToWorldTransform()->GetMatrix().GetVnlMatrix().get_column(2);
+    return this->GetIndexToWorldTransform()->GetMatrix().GetVnlMatrix().get_column(2).as_ref();
   }
 
   ScalarType PlaneGeometry::DistanceFromPlane(const Point3D &pt3d_mm) const { return fabs(SignedDistance(pt3d_mm)); }

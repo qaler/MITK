@@ -60,7 +60,6 @@ found in the LICENSE file.
 #include <QmitkOpenStdMultiWidgetEditorAction.h>
 
 #include <itkConfigure.h>
-#include <vtkConfigure.h>
 #include <mitkVersion.h>
 #include <mitkIDataStorageService.h>
 #include <mitkIDataStorageReference.h>
@@ -125,8 +124,9 @@ public:
 
   void PartHidden(const berry::IWorkbenchPartReference::Pointer& ref) override
   {
-    if (!windowAdvisor->lastActiveEditor.Expired() &&
-      ref->GetPart(false) == windowAdvisor->lastActiveEditor.Lock())
+    auto lockedLastActiveEditor = windowAdvisor->lastActiveEditor.Lock();
+
+    if (lockedLastActiveEditor.IsNotNull() && ref->GetPart(false) == lockedLastActiveEditor)
     {
       windowAdvisor->UpdateTitle(true);
     }
@@ -134,8 +134,9 @@ public:
 
   void PartVisible(const berry::IWorkbenchPartReference::Pointer& ref) override
   {
-    if (!windowAdvisor->lastActiveEditor.Expired() &&
-      ref->GetPart(false) == windowAdvisor->lastActiveEditor.Lock())
+    auto lockedLastActiveEditor = windowAdvisor->lastActiveEditor.Lock();
+
+    if (lockedLastActiveEditor.IsNotNull() && ref->GetPart(false) == lockedLastActiveEditor)
     {
       windowAdvisor->UpdateTitle(false);
     }
@@ -162,7 +163,7 @@ public:
 
   void PartOpened(const berry::IWorkbenchPartReference::Pointer& ref) override
   {
-    if (ref->GetId()=="org.mitk.views.viewnavigatorview")
+    if (ref->GetId()=="org.mitk.views.viewnavigator")
     {
       viewNavigatorAction->setChecked(true);
     }
@@ -170,7 +171,7 @@ public:
 
   void PartClosed(const berry::IWorkbenchPartReference::Pointer& ref) override
   {
-    if (ref->GetId()=="org.mitk.views.viewnavigatorview")
+    if (ref->GetId()=="org.mitk.views.viewnavigator")
     {
       viewNavigatorAction->setChecked(false);
     }
@@ -178,7 +179,7 @@ public:
 
   void PartVisible(const berry::IWorkbenchPartReference::Pointer& ref) override
   {
-    if (ref->GetId()=="org.mitk.views.viewnavigatorview")
+    if (ref->GetId()=="org.mitk.views.viewnavigator")
     {
       viewNavigatorAction->setChecked(true);
     }
@@ -186,7 +187,7 @@ public:
 
   void PartHidden(const berry::IWorkbenchPartReference::Pointer& ref) override
   {
-    if (ref->GetId()=="org.mitk.views.viewnavigatorview")
+    if (ref->GetId()=="org.mitk.views.viewnavigator")
     {
       viewNavigatorAction->setChecked(false);
     }
@@ -438,7 +439,7 @@ QmitkExtWorkbenchWindowAdvisor::QmitkExtWorkbenchWindowAdvisor(berry::WorkbenchA
   , dropTargetListener(new QmitkDefaultDropTargetListener)
 {
   productName = QCoreApplication::applicationName();
-  viewExcludeList.push_back("org.mitk.views.viewnavigatorview");
+  viewExcludeList.push_back("org.mitk.views.viewnavigator");
 }
 
 QmitkExtWorkbenchWindowAdvisor::~QmitkExtWorkbenchWindowAdvisor()
@@ -604,7 +605,7 @@ void QmitkExtWorkbenchWindowAdvisor::PostWindowCreate()
       continue;
     if ((*iter)->GetId() == "org.mitk.views.imagenavigator")
       continue;
-    if ((*iter)->GetId() == "org.mitk.views.viewnavigatorview")
+    if ((*iter)->GetId() == "org.mitk.views.viewnavigator")
       continue;
 
     std::pair<QString, berry::IViewDescriptor::Pointer> p((*iter)->GetLabel(), (*iter));
@@ -781,7 +782,7 @@ void QmitkExtWorkbenchWindowAdvisor::PostWindowCreate()
   }
 
   viewNavigatorAction = new QAction(berry::QtStyleManager::ThemeIcon(QStringLiteral(":/org.mitk.gui.qt.ext/view-manager.svg")),"&View Navigator", nullptr);
-  viewNavigatorFound = window->GetWorkbench()->GetViewRegistry()->Find("org.mitk.views.viewnavigatorview");
+  viewNavigatorFound = window->GetWorkbench()->GetViewRegistry()->Find("org.mitk.views.viewnavigator");
   if (viewNavigatorFound)
   {
     QObject::connect(viewNavigatorAction, SIGNAL(triggered(bool)), QmitkExtWorkbenchWindowAdvisorHack::undohack, SLOT(onViewNavigator()));
@@ -790,7 +791,7 @@ void QmitkExtWorkbenchWindowAdvisor::PostWindowCreate()
     // add part listener for view navigator
     viewNavigatorPartListener.reset(new PartListenerForViewNavigator(viewNavigatorAction));
     window->GetPartService()->AddPartListener(viewNavigatorPartListener.data());
-    berry::IViewPart::Pointer viewnavigatorview = window->GetActivePage()->FindView("org.mitk.views.viewnavigatorview");
+    berry::IViewPart::Pointer viewnavigatorview = window->GetActivePage()->FindView("org.mitk.views.viewnavigator");
     viewNavigatorAction->setChecked(false);
     if (viewnavigatorview)
     {
@@ -1102,7 +1103,7 @@ void QmitkExtWorkbenchWindowAdvisorHack::onImageNavigator()
 void QmitkExtWorkbenchWindowAdvisorHack::onViewNavigator()
 {
   // show/hide viewnavigatorView
-  SafeHandleNavigatorView("org.mitk.views.viewnavigatorview");
+  SafeHandleNavigatorView("org.mitk.views.viewnavigator");
 }
 
 void QmitkExtWorkbenchWindowAdvisorHack::onEditPreferences()
@@ -1363,9 +1364,11 @@ void QmitkExtWorkbenchWindowAdvisor::UpdateTitle(bool editorHidden)
     return;
   }
 
-  if (!lastActiveEditor.Expired())
+  auto lockedLastActiveEditor = lastActiveEditor.Lock();
+
+  if (lockedLastActiveEditor.IsNotNull())
   {
-    lastActiveEditor.Lock()->RemovePropertyListener(editorPropertyListener.data());
+    lockedLastActiveEditor->RemovePropertyListener(editorPropertyListener.data());
   }
 
   lastActiveEditor = activeEditor;
@@ -1385,9 +1388,11 @@ void QmitkExtWorkbenchWindowAdvisor::PropertyChange(const berry::Object::Pointer
 {
   if (propId == berry::IWorkbenchPartConstants::PROP_TITLE)
   {
-    if (!lastActiveEditor.Expired())
+    auto lockedLastActiveEditor = lastActiveEditor.Lock();
+
+    if (lockedLastActiveEditor.IsNotNull())
     {
-      QString newTitle = lastActiveEditor.Lock()->GetPartName();
+      QString newTitle = lockedLastActiveEditor->GetPartName();
       if (lastEditorTitle != newTitle)
       {
         RecomputeTitle();

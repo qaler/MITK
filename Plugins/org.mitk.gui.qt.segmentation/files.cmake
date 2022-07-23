@@ -1,14 +1,20 @@
 set(SRC_CPP_FILES
   QmitkSegmentationPreferencePage.cpp
+  QmitkNewSegmentationDialog.cpp
+  QmitkLabelSetWidget.cpp
 )
 
 set(INTERNAL_CPP_FILES
   mitkPluginActivator.cpp
   QmitkSegmentationView.cpp
-  QmitkCreatePolygonModelAction.cpp
   QmitkAutocropAction.cpp
   QmitkAutocropLabelSetImageAction.cpp
+  QmitkCreatePolygonModelAction.cpp
+  QmitkLoadMultiLabelPresetAction.cpp
+  QmitkSaveMultiLabelPresetAction.cpp
   Common/QmitkDataSelectionWidget.cpp
+  Common/QmitkLabelsWidget.cpp
+  Common/QmitkLayersWidget.cpp
   SegmentationUtilities/QmitkSegmentationUtilitiesView.cpp
   SegmentationUtilities/QmitkSegmentationUtilityWidget.cpp
   SegmentationUtilities/BooleanOperations/QmitkBooleanOperationsWidget.cpp
@@ -19,8 +25,13 @@ set(INTERNAL_CPP_FILES
 )
 
 set(UI_FILES
-  src/internal/QmitkSegmentationControls.ui
+  src/QmitkSegmentationPreferencePageControls.ui
+  src/QmitkNewSegmentationDialog.ui
+  src/QmitkLabelSetWidgetControls.ui
+  src/internal/QmitkSegmentationViewControls.ui
   src/internal/Common/QmitkDataSelectionWidgetControls.ui
+  src/internal/Common/QmitkLabelsWidgetControls.ui
+  src/internal/Common/QmitkLayersWidgetControls.ui
   src/internal/SegmentationUtilities/QmitkSegmentationUtilitiesViewControls.ui
   src/internal/SegmentationUtilities/BooleanOperations/QmitkBooleanOperationsWidgetControls.ui
   src/internal/SegmentationUtilities/ImageMasking/QmitkImageMaskingWidgetControls.ui
@@ -31,12 +42,18 @@ set(UI_FILES
 
 set(MOC_H_FILES
   src/QmitkSegmentationPreferencePage.h
+  src/QmitkNewSegmentationDialog.h
+  src/QmitkLabelSetWidget.h
   src/internal/mitkPluginActivator.h
   src/internal/QmitkSegmentationView.h
-  src/internal/QmitkCreatePolygonModelAction.h
   src/internal/QmitkAutocropAction.h
   src/internal/QmitkAutocropLabelSetImageAction.h
+  src/internal/QmitkCreatePolygonModelAction.h
+  src/internal/QmitkLoadMultiLabelPresetAction.h
+  src/internal/QmitkSaveMultiLabelPresetAction.h
   src/internal/Common/QmitkDataSelectionWidget.h
+  src/internal/Common/QmitkLabelsWidget.h
+  src/internal/Common/QmitkLayersWidget.h
   src/internal/SegmentationUtilities/QmitkSegmentationUtilitiesView.h
   src/internal/SegmentationUtilities/QmitkSegmentationUtilityWidget.h
   src/internal/SegmentationUtilities/BooleanOperations/QmitkBooleanOperationsWidget.h

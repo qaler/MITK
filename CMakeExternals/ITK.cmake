@@ -33,6 +33,7 @@ if(NOT DEFINED ITK_DIR)
     list(APPEND additional_cmake_args
          -DModule_ITKVideoBridgeOpenCV:BOOL=ON
          -DOpenCV_DIR:PATH=${OpenCV_DIR}
+         "-DCMAKE_CONFIGURATION_TYPES:STRING=Debug$<SEMICOLON>Release"
         )
   endif()
 
@@ -57,6 +58,7 @@ if(NOT DEFINED ITK_DIR)
      UPDATE_COMMAND ""
      URL ${MITK_THIRDPARTY_DOWNLOAD_PREFIX_URL}/InsightToolkit-5.2.1.tar.gz
      URL_MD5 48c1fe49f75fdaa91b31bbf9dda01a42
+     PATCH_COMMAND ${PATCH_COMMAND} -N -p1 -i ${CMAKE_CURRENT_LIST_DIR}/ITK-5.2.1.patch
      CMAKE_GENERATOR ${gen}
      CMAKE_GENERATOR_PLATFORM ${gen_platform}
      CMAKE_ARGS
